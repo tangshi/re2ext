@@ -2,7 +2,7 @@
 #include <re2/re2.h>
 #include <vector>
 #include <string>
-#include "re2_ext.h"
+#include "re2ext.h"
 
 using namespace std;
 using namespace re2;

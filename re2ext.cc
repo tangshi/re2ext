@@ -2,22 +2,23 @@
 #include "utf.h"
 
 using namespace std;
-using namespace re2;
 
+namespace re2
+{
 
-MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups=-1, size_t offset=0);
+MatchObject apply(StringPiece text, re2::RE2 &pattern, re2::RE2::Anchor anchor, int n_groups=-1, size_t offset=0);
 
 
 MatchObject match(const std::string &text, re2::RE2 &pattern, bool detail, size_t offset)
 {
     int n_groups = detail ? -1 : 0;
-    return apply(text, pattern, RE2::ANCHOR_START, n_groups);
+    return apply(text, pattern, re2::RE2::ANCHOR_START, n_groups, offset);
 }
 
 MatchObject search(const std::string &text, re2::RE2 &pattern, bool detail, size_t offset)
 {
     int n_groups = detail ? -1 : 0;
-    return apply(text, pattern, RE2::UNANCHORED, n_groups);
+    return apply(text, pattern, RE2::UNANCHORED, n_groups, offset);
 }
 
 std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern, size_t offset)
@@ -27,7 +28,7 @@ std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern, siz
 
     while(true)
     {
-        MatchObject mb = apply(sp, pattern, RE2::UNANCHORED, 1);
+        MatchObject mb = apply(sp, pattern, re2::RE2::UNANCHORED, 1, offset);
         if (!mb.has_matched())
         {
             break;
@@ -42,16 +43,16 @@ std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern, siz
     return vec;
 }
 
-std::string sub(const std::string &text, re2::RE2 &pattern, const std::string repl, size_t offset)
+std::string sub(const std::string &text, re2::RE2 &pattern, const std::string repl)
 {
     std::string out_string(text);
 
-    RE2::GlobalReplace(&out_string, pattern, repl);
+    re2::RE2::GlobalReplace(&out_string, pattern, repl);
 
     return out_string;
 }
 
-std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::string(MatchObject&)> repl, size_t offset)
+std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::string(MatchObject&)> repl)
 {
     const char* p = text.data();
     const char* ep = p + text.size();
@@ -60,7 +61,7 @@ std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::s
 
     while (p <= ep)
     {
-        MatchObject mb = apply(p, pattern, RE2::UNANCHORED);
+        MatchObject mb = apply(p, pattern, re2::RE2::UNANCHORED);
         if (!mb.has_matched())
         {
             break;
@@ -79,7 +80,7 @@ std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::s
             //
             // fullrune() takes int, not size_t. However, it just looks
             // at the leading byte and treats any length >= 4 the same.
-            if (pattern.options().encoding() == RE2::Options::EncodingUTF8 &&
+            if (pattern.options().encoding() == re2::RE2::Options::EncodingUTF8 &&
                 fullrune(p, static_cast<int>(std::min(static_cast<ptrdiff_t>(4), ep - p))))
             {
                 // re is in UTF-8 mode and there is enough left of str
@@ -123,7 +124,7 @@ std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::s
     return out;
 }
 
-MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups, size_t offset)
+MatchObject apply(StringPiece text, re2::RE2 &pattern, re2::RE2::Anchor anchor, int n_groups, size_t offset)
 {
     StringPiece *groups = nullptr;
 
@@ -165,3 +166,5 @@ MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_grou
         }
     }
 }
+
+} // namespace re2

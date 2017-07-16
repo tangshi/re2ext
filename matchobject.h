@@ -5,6 +5,8 @@
 #include <re2/stringpiece.h>
 #include <vector>
 
+namespace re2
+{
 
 class MatchObject
 {
@@ -38,5 +40,7 @@ protected:
     re2::StringPiece _string;
     std::vector<re2::StringPiece> _groups;
 };
+
+} // namespace re2
 
 #endif  // __RE2_MATCH_OBJECT_H__

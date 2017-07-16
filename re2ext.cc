@@ -5,22 +5,22 @@ using namespace std;
 using namespace re2;
 
 
-MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups=-1);
+MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups=-1, size_t offset=0);
 
 
-MatchObject match(const std::string &text, re2::RE2 &pattern, bool detail)
+MatchObject match(const std::string &text, re2::RE2 &pattern, bool detail, size_t offset)
 {
     int n_groups = detail ? -1 : 0;
     return apply(text, pattern, RE2::ANCHOR_START, n_groups);
 }
 
-MatchObject search(const std::string &text, re2::RE2 &pattern, bool detail)
+MatchObject search(const std::string &text, re2::RE2 &pattern, bool detail, size_t offset)
 {
     int n_groups = detail ? -1 : 0;
     return apply(text, pattern, RE2::UNANCHORED, n_groups);
 }
 
-std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern)
+std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern, size_t offset)
 {
     std::vector<std::string> vec;
     StringPiece sp(text);
@@ -42,7 +42,7 @@ std::vector<std::string> findall(const std::string &text, re2::RE2 &pattern)
     return vec;
 }
 
-std::string sub(const std::string &text, re2::RE2 &pattern, const std::string repl)
+std::string sub(const std::string &text, re2::RE2 &pattern, const std::string repl, size_t offset)
 {
     std::string out_string(text);
 
@@ -51,7 +51,7 @@ std::string sub(const std::string &text, re2::RE2 &pattern, const std::string re
     return out_string;
 }
 
-std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::string(MatchObject&)> repl)
+std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::string(MatchObject&)> repl, size_t offset)
 {
     const char* p = text.data();
     const char* ep = p + text.size();
@@ -123,7 +123,7 @@ std::string sub(const std::string &text, re2::RE2 &pattern, std::function<std::s
     return out;
 }
 
-MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups)
+MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_groups, size_t offset)
 {
     StringPiece *groups = nullptr;
 
@@ -139,7 +139,7 @@ MatchObject apply(StringPiece text, RE2 &pattern, RE2::Anchor anchor, int n_grou
 
     bool matched = pattern.Match(
                 text,
-                0,
+                offset,
                 text.size(),
                 anchor,
                 groups,

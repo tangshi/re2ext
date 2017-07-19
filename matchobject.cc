@@ -26,7 +26,15 @@ const re2::StringPiece MatchObject::group(std::string group_name)
 size_t MatchObject::start(int group_index)
 {
     re2::StringPiece sp = group(group_index);
-    return (sp.begin() - _string.begin());
+
+    if (sp.empty())
+    {
+        return string::npos;
+    }
+    else
+    {
+        return (sp.begin() - _string.begin());
+    }
 }
 
 size_t MatchObject::start(std::string group_name)
@@ -38,7 +46,14 @@ size_t MatchObject::start(std::string group_name)
 size_t MatchObject::end(int group_index)
 {
     re2::StringPiece sp = group(group_index);
-    return (sp.end() - _string.begin());
+    if (sp.empty())
+    {
+        return string::npos;
+    }
+    else
+    {
+        return (sp.end() - _string.begin());
+    }
 }
 
 size_t MatchObject::end(std::string group_name)

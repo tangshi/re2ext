@@ -8,6 +8,14 @@
 namespace re2
 {
 
+/*
+ * MatchObject stores the result info of a regex matching which is used in re2ext.h
+ * If constructed with detail message(call has_detail to check it), then you are able to
+ * use group, start, end methods that are familier in python re module, these methods
+ * may throws an **out_of_range** exception if the input parameter is out of range or not exists,
+ * as for empty captured group, group methods return a empty StringPiece and
+ * start and end methods return **string::npos**.
+*/
 class MatchObject
 {
 public:
@@ -32,6 +40,8 @@ public:
     size_t end(int group_index=0);
 
     size_t end(std::string group_name);
+
+    size_t groups_size() { return _groups.size(); }
 
 protected:
 

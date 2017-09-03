@@ -1,5 +1,5 @@
-#ifndef __RE2_EXTENSION_H__
-#define __RE2_EXTENSION_H__
+#ifndef RE2_EXTENSION_H_
+#define RE2_EXTENSION_H_
 
 #include <string>
 #include <functional>
@@ -22,4 +22,4 @@ std::string sub(const std::string &string, re2::RE2 &pattern, std::function<std:
 }
 
 
-#endif // __RE2_EXTENSION_H__
+#endif // RE2_EXTENSION_H_

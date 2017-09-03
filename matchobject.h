@@ -1,5 +1,5 @@
-#ifndef __RE2_MATCH_OBJECT_H__
-#define __RE2_MATCH_OBJECT_H__
+#ifndef RE2_MATCH_OBJECT_H_
+#define RE2_MATCH_OBJECT_H_
 
 #include <re2/re2.h>
 #include <re2/stringpiece.h>
@@ -53,4 +53,4 @@ protected:
 
 } // namespace re2
 
-#endif  // __RE2_MATCH_OBJECT_H__
+#endif  // RE2_MATCH_OBJECT_H_
